@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Abstract
 {
-    public interface INutrientDal : IAsyncRepository<Nutrient>
+    public interface IEducationDal : IAsyncRepository<Education>
     {
-        public Task<Nutrient> GiveToPet(int id, Nutrient nutrient);
-        public Task<Nutrient> GetByPetId(int id);
+        public Task<Education> GetByPetId(int id);
+        public Task<Education> GiveToPet(int id, Education education);
     }
 }

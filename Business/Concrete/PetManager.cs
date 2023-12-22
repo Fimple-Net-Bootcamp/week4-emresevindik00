@@ -12,10 +12,16 @@ namespace Business.Concrete
     public class PetManager : IPetService
     {
         IPetDal _petDal;
+        IHealthService _healthService;
+        IActivityService _activityService;
+        INutrientService _nutrientService;
 
-        public PetManager(IPetDal petDal)
+        public PetManager(IPetDal petDal, IHealthService healthService, IActivityService activityService, INutrientService nutrientService)
         {
             _petDal = petDal;
+            _healthService = healthService;
+            _activityService = activityService;
+            _nutrientService = nutrientService;
         }
         public async Task<Pet> Add(Pet pet)
         {
@@ -25,6 +31,22 @@ namespace Business.Concrete
         public async Task<List<Pet>> GetAll()
         {
             return await _petDal.GetAllAsync();
+        }
+
+        public Statistic GetAllStatisticsById(int id)
+        {
+            Statistic statistic = new Statistic();
+
+            var healths = _healthService.GetHealthByPetId(id);
+            statistic.Healths.Add(healths.Result);
+
+            var activities = _activityService.GetByPetId(id);
+            statistic.Activities.Add(activities.Result);
+
+            var nutrients = _nutrientService.GetByPetId(id);
+            statistic.Nutrients.Add(nutrients.Result);
+
+            return statistic;
         }
 
         public async Task<Pet> GetById(int id)

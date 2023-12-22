@@ -17,7 +17,7 @@ namespace DataAccess.Concrete
         {
             using (PetContext context = new PetContext())
             {
-                var result = context.Activities.Where(a => a.Id == id)
+                var result = context.Activities.Where(a => a.Pet.Id == id)
                     .Include(p => p.Pet);
 
                 return await result.SingleOrDefaultAsync();

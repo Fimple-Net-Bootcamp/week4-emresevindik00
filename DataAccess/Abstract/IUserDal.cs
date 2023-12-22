@@ -10,5 +10,6 @@ namespace DataAccess.Abstract
 {
     public interface IUserDal : IAsyncRepository<User>
     {
+        int GetStatisticByUserId(int id);
     }
 }

@@ -12,7 +12,15 @@ namespace Business.ValidationRules
     {
         public UserValidator()
         {
-            
+            RuleFor(n => n.Name)
+                .NotEmpty().WithMessage("Boş Olamaz")
+                .MinimumLength(2).WithMessage("En az 2 harf olmalı")
+                .MaximumLength(30).WithMessage("En fazla 30 harf olmalı");
+
+            RuleFor(n => n.Surname)
+                .NotEmpty().WithMessage("Boş Olamaz")
+                .MinimumLength(2).WithMessage("En az 2 harf olmalı")
+                .MaximumLength(30).WithMessage("En fazla 30 harf olmalı");
         }
     }
 }

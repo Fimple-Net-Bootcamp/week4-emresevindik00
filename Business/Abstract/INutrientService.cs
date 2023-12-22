@@ -11,5 +11,6 @@ namespace Business.Abstract
     {
         Task<List<Nutrient>> GetAll();
         Task<Nutrient> GiveToPet(int id, Nutrient nutrient);
+        Task<Nutrient> GetByPetId(int id);
     }
 }

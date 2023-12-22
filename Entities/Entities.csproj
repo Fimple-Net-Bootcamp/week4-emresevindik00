@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Profile\" />
-    <Folder Include="Response\" />
+    <Compile Remove="Profile\**" />
+    <Compile Remove="Response\**" />
+    <EmbeddedResource Remove="Profile\**" />
+    <EmbeddedResource Remove="Response\**" />
+    <None Remove="Profile\**" />
+    <None Remove="Response\**" />
   </ItemGroup>
 
   <ItemGroup>

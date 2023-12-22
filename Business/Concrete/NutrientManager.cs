@@ -22,6 +22,11 @@ namespace Business.Concrete
             return _nutrientDal.GetAllAsync();
         }
 
+        public Task<Nutrient> GetByPetId(int id)
+        {
+            return _nutrientDal.GetByPetId(id);
+        }
+
         public Task<Nutrient> GiveToPet(int id, Nutrient nutrient)
         {
             return _nutrientDal.GiveToPet(id, nutrient);

@@ -13,5 +13,6 @@ namespace Business.Abstract
         Task<Pet> GetById(int id);
         Task<Pet> Add(Pet pet);
         Task<Pet> Update(Pet pet);
+        Statistic GetAllStatisticsById(int id);
     }
 }

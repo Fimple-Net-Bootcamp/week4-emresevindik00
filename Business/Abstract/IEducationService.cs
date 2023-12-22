@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
-    public interface IUserService
+    public interface IEducationService
     {
-        Task<User> Create(User user);
-        Task<User> GetById(int id);
-        Statistic GetStatisticById(int id);
+        Task<Education> AddToPet(int id, Education education);
+        Task<Education> GetByPetId(int id);
     }
 }

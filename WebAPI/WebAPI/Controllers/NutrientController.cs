@@ -2,6 +2,7 @@
 using Business.Abstract;
 using Entities;
 using Entities.Dtos;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -12,11 +13,13 @@ namespace WebAPI.Controllers
     {
         private readonly INutrientService _nutrientService;
         private readonly IMapper _mapper;
+        private readonly IValidator<NutrientDto> _validator;
 
-        public NutrientController(INutrientService nutrientService, IMapper mapper)
+        public NutrientController(INutrientService nutrientService, IMapper mapper, IValidator<NutrientDto> validator)
         {
             _nutrientService = nutrientService;
             _mapper = mapper;
+            _validator = validator;
         }
 
         [HttpGet]
@@ -37,7 +40,7 @@ namespace WebAPI.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> GiveToPet(int id, Nutrient nutrient)
         {
-            var result = await _nutrientService.GiveToPet(id, nutrient);
+            var result = await _nutrientService.GiveToPet(nutrient.Pet.Id, nutrient);
 
             if (result == null)
             {

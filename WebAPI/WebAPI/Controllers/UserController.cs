@@ -2,6 +2,7 @@
 using Business.Abstract;
 using Entities;
 using Entities.Dtos;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -12,19 +13,28 @@ namespace WebAPI.Controllers
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IValidator<UserDto> _validator;
 
-        public UserController(IUserService userService, IMapper mapper)
+        public UserController(IUserService userService, IMapper mapper, IValidator<UserDto> validator)
         {
             _userService = userService;
             _mapper = mapper;
+            _validator = validator;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserDto userDto)
+        public async Task<IActionResult> Create(UserDto user)
         {
-            var user = _mapper.Map<User>(userDto);
+            var validatorResult = _validator.Validate(user);
 
-            var result = await _userService.Create(user);
+            if (!validatorResult.IsValid)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, validatorResult.Errors);
+            }
+
+            var userDtoToUser = _mapper.Map<User>(user);
+
+            var result = await _userService.Create(userDtoToUser);
 
             if (result == null)
             {
@@ -47,6 +57,19 @@ namespace WebAPI.Controllers
             var result = _mapper.Map<UserDto>(userResponse);
 
             return Ok(result);
+        }
+
+        [HttpGet("statistics/{id}")]
+        public async Task<IActionResult> GetStatisticById(int id)
+        {
+            var statistic = _userService.GetStatisticById(id);
+
+            if (statistic == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(statistic);
         }
     }
 }

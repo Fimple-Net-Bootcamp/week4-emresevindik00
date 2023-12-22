@@ -1,5 +1,6 @@
 ﻿using Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace DataAccess.Contexts
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Pet;Trusted_Connection=true");
+            //optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
 
         public DbSet<User> Users { get; set; }
@@ -20,5 +22,7 @@ namespace DataAccess.Contexts
         public DbSet<Health> Healths { get; set; }
         public DbSet<Activity> Activities { get; set; }
         public DbSet<Nutrient> Nutrients { get; set; }
+        public DbSet<Education> Educations { get; set; }
+        public DbSet<SocialInteraction> SocialInteractions { get; set; }
     }
 }

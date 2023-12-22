@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 
 namespace Entities
 {
-    public class User
+    public class SocialInteraction
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Surname { get; set; }
+        public string InteractionName { get; set; }
         public Pet Pet { get; set; }
     }
 }

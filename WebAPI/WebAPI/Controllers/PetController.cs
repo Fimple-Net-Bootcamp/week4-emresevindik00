@@ -2,6 +2,7 @@
 using Business.Abstract;
 using Entities;
 using Entities.Dtos;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -12,18 +13,27 @@ namespace WebAPI.Controllers
     {
         private readonly IPetService _petService;
         private readonly IMapper _mapper;
+        private readonly IValidator<PetDto> _validator;
 
-        public PetController(IPetService petService, IMapper mapper)
+        public PetController(IPetService petService, IMapper mapper, IValidator<PetDto> validator)
         {
             _petService = petService;
             _mapper = mapper;
+            _validator = validator;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(PetDto petDto)
+        public async Task<IActionResult> Create(PetDto pet)
         {
-            var pet = _mapper.Map<Pet>(petDto);
-            var result = await _petService.Add(pet);
+            var validatorResult = _validator.Validate(pet);
+
+            if (!validatorResult.IsValid)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, validatorResult.Errors);
+            }
+
+            var dtoToPet = _mapper.Map<Pet>(pet);
+            var result = await _petService.Add(dtoToPet);
 
             if (result == null)
             {
@@ -79,6 +89,19 @@ namespace WebAPI.Controllers
             var result = _mapper.Map<PetDto>(petResponse);
 
             return Ok(result);
+        }
+
+        [HttpGet("/statistics/{id}")]
+        public async Task<IActionResult> GetStatisticById(int id)
+        {
+            var petResponse = _petService.GetAllStatisticsById(id);
+
+            if (petResponse == null)
+            {
+                return NoContent();
+            }
+
+            return Ok(petResponse);
         }
     }
 }

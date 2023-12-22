@@ -3,6 +3,7 @@ using Business.Abstract;
 using Entities;
 using Entities.Dtos;
 using Entities.Request;
+using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
@@ -15,11 +16,13 @@ namespace WebAPI.Controllers
     {
         private readonly IHealthService _healthService;
         private readonly IMapper _mapper;
+        private readonly IValidator<HealthDto> _validator;
 
-        public HealthController(IHealthService healthService, IMapper mapper)
+        public HealthController(IHealthService healthService, IMapper mapper, IValidator<HealthDto> validator)
         {
             _healthService = healthService;
             _mapper = mapper;
+            _validator = validator;
         }
 
         [HttpGet("{id}")]

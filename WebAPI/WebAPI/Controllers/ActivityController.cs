@@ -2,6 +2,7 @@
 using Business.Abstract;
 using Entities;
 using Entities.Dtos;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -12,26 +13,34 @@ namespace WebAPI.Controllers
     {
         private readonly IActivityService _activityService;
         private readonly IMapper _mapper;
+        private readonly IValidator<ActivityDto> _validator;
 
-        public ActivityController(IActivityService activityService, IMapper mapper)
+        public ActivityController(IActivityService activityService, IMapper mapper, IValidator<ActivityDto> validator)
         {
             _activityService = activityService;
             _mapper = mapper;
+            _validator = validator;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Activity activity)
+        public async Task<IActionResult> Create(ActivityDto activity)
         {
-            var activityResponse = await _activityService.Add(activity);
-
-            if (activityResponse == null)
+            if (activity == null)
             {
                 return NoContent();
             }
 
-            var result = _mapper.Map<ActivityDto>(activityResponse);
+            var validatorResult = _validator.Validate(activity);
 
-            return Ok(result);
+            if (!validatorResult.IsValid)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, validatorResult.Errors);
+            }
+
+            var result = _mapper.Map<Activity>(activity);
+            var activityResponse = await _activityService.Add(result);  
+
+            return Ok(activityResponse);
         }
 
         [HttpGet("/{id}")]

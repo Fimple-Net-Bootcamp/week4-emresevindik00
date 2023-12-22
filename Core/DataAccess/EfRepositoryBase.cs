@@ -17,7 +17,9 @@ namespace Core.DataAccess
         {
             using (TContext context = new TContext())
             {
-                await context.AddAsync(entity);
+                var addedEntity = context.Entry(entity);
+                addedEntity.State = EntityState.Added;
+                //await context.AddAsync(entity);
                 await context.SaveChangesAsync();
                 return entity;
             }    
@@ -27,7 +29,9 @@ namespace Core.DataAccess
         {
             using (TContext context = new TContext())
             {
-                context.Remove(entity);
+                //context.Remove(entity);
+                var deletedEntity = context.Entry(entity);
+                deletedEntity.State = EntityState.Deleted;
                 await context.SaveChangesAsync();
                 return entity;
             }    
@@ -38,7 +42,7 @@ namespace Core.DataAccess
             using (TContext context = new TContext())
             {
                 IQueryable<TEntity> queryable = context.Set<TEntity>();
-                queryable = filter == null ? queryable : queryable.Where(filter);
+                queryable = filter == null ? queryable : queryable.Where(filter).AsNoTracking();
                 return await queryable.ToListAsync();
             }   
         }
@@ -47,7 +51,7 @@ namespace Core.DataAccess
         {
             using (TContext context = new TContext())
             {
-                IQueryable<TEntity> queryable = context.Set<TEntity>();
+                IQueryable<TEntity> queryable = context.Set<TEntity>().AsNoTracking();
                 return await queryable.SingleOrDefaultAsync(filter);
             }
             
@@ -57,7 +61,9 @@ namespace Core.DataAccess
         {
             using (TContext context = new TContext())
             {
-                context.Update(entity);
+                //context.Update(entity);
+                var updatedEntity = context.Entry(entity);
+                updatedEntity.State = EntityState.Modified;
                 await context.SaveChangesAsync();
                 return entity;
             }    

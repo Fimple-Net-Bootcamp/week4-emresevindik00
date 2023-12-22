@@ -17,6 +17,8 @@ namespace Entities.Request
             CreateMap<Pet, PetDto>().ReverseMap();
             CreateMap<Nutrient, NutrientDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<Education, EducationDto>().ReverseMap();
+            CreateMap<SocialInteraction, SocialInteractionDto>().ReverseMap();
         }
     }
 }

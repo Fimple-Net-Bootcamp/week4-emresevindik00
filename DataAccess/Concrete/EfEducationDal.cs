@@ -11,31 +11,31 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete
 {
-    public class EfNutrientDal : EfRepositoryBase<Nutrient, PetContext>, INutrientDal
+    public class EfEducationDal : EfRepositoryBase<Education, PetContext>, IEducationDal
     {
-        public async Task<Nutrient> GetByPetId(int id)
+        public async Task<Education> GetByPetId(int id)
         {
             using (PetContext context = new PetContext())
             {
-                var pets = await context.Nutrients.Where(e => e.Pet.Id == id)
-                    .Include(e => e.Pet)
+                var pets = await context.Educations.Where(e => e.pet.Id == id)
+                    .Include(e => e.pet)
                     .SingleOrDefaultAsync();
 
                 return pets;
             }
         }
 
-        public async Task<Nutrient> GiveToPet(int id, Nutrient nutrient)
+        public async Task<Education> GiveToPet(int id, Education education)
         {
             using (PetContext context = new PetContext())
             {
                 var pets = await context.Pets.FindAsync(id);
 
-                nutrient.Pet.Id = id;
-                var addedEntity = context.Entry(nutrient);
+                education.pet.Id = id;
+                var addedEntity = context.Entry(education);
                 addedEntity.State = EntityState.Added;
                 await context.SaveChangesAsync();
-                return nutrient;
+                return education;
             }
         }
     }
